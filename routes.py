@@ -1,38 +1,28 @@
 from flask import render_template, Flask, flash, url_for, redirect
-from flask_sqlalchemy import SQLAlchemy
+
+from PbApp import pb_app, pb_db
 from models import User, PkgSpace
-from forms import RegistrationForm
 
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = '2d65c65e323654552be29cc808a58eac'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-db = SQLAlchemy(app)
-
-
-@app.route('/')
-@app.route('/home')
+@pb_app.route('/')
+@pb_app.route('/home')
 def home():
     return render_template('home.html', title='Home')
 
 
-@app.route('/login')
+@pb_app.route('/login')
 def login():
     return render_template('login.html', title='Log In')
 
 
-@app.route('/register')
+@pb_app.route('/register')
 def register():
-
+    from forms import RegistrationForm
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(username=form.username.data, email=form.email.data, password=form.password.data)
-        db.session.add(user)
-        db.session.commit()
+        pb_db.session.add(user)
+        pb_db.session.commit()
         flash('User has been registered.', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
