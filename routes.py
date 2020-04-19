@@ -1,5 +1,5 @@
 from flask import render_template, Flask, flash, url_for, redirect, request
-from flask_login import login_user
+from flask_login import login_user, current_user, logout_user
 from PbApp import pb_app, pb_db
 from models import User, PkgSpace
 
@@ -26,6 +26,8 @@ def register():
 
 @pb_app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
     from forms import LoginForm
     form = LoginForm()
     if form.validate_on_submit():
@@ -38,3 +40,9 @@ def login():
         else:
             flash('Login failed, try again.', 'danger')
     return render_template('login.html', title='Log In', form=form)
+
+
+@pb_app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))

@@ -13,7 +13,18 @@
 
 </head>
 <body>
-    <div class="div01">
+    <header>
+        <div class="div01">
+            {% if current_user.is_authenticated %}
+                <a class="button" href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a class="button" href="{{ url_for('login') }}">Log In</a>
+                <a class="button" href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        </div>
+    </header>
+    <main>
+         <div class="div01">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
@@ -27,5 +38,7 @@
         {% block content %}
         {% endblock content %}
     </div>
+    </main>
+
 </body>
 </html>
