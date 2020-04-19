@@ -1,5 +1,33 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h3>Register Page</h3>
-    <p>This is the page for registration.</p>
+    <div>
+        <h3>Register Page</h3>
+        <p>Welcome and Register!</p>
+    </div>
+    <div>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset >
+                <div>
+                    {{ form.username.label }} {{ form.username() }}
+                </div>
+                <br>
+                <div>
+                    {{ form.email.label }} {{ form.email() }}
+                </div>
+                <br>
+                <div>
+                    {{ form.password.label }} {{ form.password }}
+                </div>
+                <br>
+                <div>
+                    {{ form.conf_password.label }} {{ form.conf_password() }}
+                </div>
+                <br>
+            </fieldset>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
+    </div>
 {% endblock content %}

@@ -1,5 +1,5 @@
-from flask import render_template, Flask, flash, url_for, redirect
-
+from flask import render_template, Flask, flash, url_for, redirect, request
+from flask_login import login_user
 from PbApp import pb_app, pb_db
 from models import User, PkgSpace
 
@@ -7,15 +7,11 @@ from models import User, PkgSpace
 @pb_app.route('/')
 @pb_app.route('/home')
 def home():
-    return render_template('home.html', title='Home')
+    all_spaces = PkgSpace.query.all()
+    return render_template('home.html', title='Home', all_spaces=all_spaces)
 
 
-@pb_app.route('/login')
-def login():
-    return render_template('login.html', title='Log In')
-
-
-@pb_app.route('/register')
+@pb_app.route('/register', methods=['GET', 'POST' ])
 def register():
     from forms import RegistrationForm
     form = RegistrationForm()
@@ -26,3 +22,19 @@ def register():
         flash('User has been registered.', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+
+@pb_app.route('/login', methods=['GET', 'POST'])
+def login():
+    from forms import LoginForm
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and user.password == form.password.data:
+            # z modulu 'flask_login' importujemy 'login_user'
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
+        else:
+            flash('Login failed, try again.', 'danger')
+    return render_template('login.html', title='Log In', form=form)

@@ -3,8 +3,24 @@
     <h2>Home Page</h2>
     <p>This is the main page for booking parking spaces in DN.</p>
     <p>
-        <a class="button" href="{{ url_for('home') }}">Show parking spaces</a>
         <a class="button" href="{{ url_for('login') }}">Log in</a>
         <a class="button" href="{{ url_for('register') }}">Register</a>
     </p>
+    <div>
+        <p>List of Parking Spaces</p>
+            <table>
+                <tr>
+                    <th>Space number</th>
+                    <th>Space booker</th>
+                    <th>Date booked</th>
+                </tr>
+                {% for space in all_spaces %}
+                    <tr>
+                        <td>{{ space.number }}</td>
+                        <td>{{ space.booker }}</td>
+                        <td>{{ space.date_booked }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+    </div>
 {% endblock content %}
