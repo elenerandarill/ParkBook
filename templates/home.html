@@ -8,13 +8,13 @@
                 <tr>
                     <th>Space number</th>
                     <th>Space booker</th>
-                    <th>Date booked</th>
+                    <th>Owner</th>
                 </tr>
                 {% for space in all_spaces %}
                     <tr>
                         <td>{{ space.number }}</td>
                         <td>{{ space.booker }}</td>
-                        <td>{{ space.date_booked }}</td>
+
                     </tr>
                 {% endfor %}
             </table>

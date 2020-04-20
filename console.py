@@ -11,8 +11,8 @@ from PbApp import pb_db
 # pb_db.session.commit()
 
 """Deleted all users"""
-# for user in User.query.all():
-#     pb_db.session.delete(user)
+# for space in PkgSpace.query.all():
+#     pb_db.session.delete(space)
 #     pb_db.session.commit()
 
 print(User.query.all())
@@ -25,6 +25,6 @@ print(User.query.all())
 # pb_db.session.add(pkg_space02)
 # pb_db.session.commit()
 #
-print(PkgSpace.query.all())
+# print(PkgSpace.query.all())
 
 """ """
