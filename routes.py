@@ -1,5 +1,5 @@
 from flask import render_template, Flask, flash, url_for, redirect, request
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 from PbApp import pb_app, pb_db
 from models import User, PkgSpace
 
@@ -35,6 +35,7 @@ def login():
         if user and user.password == form.password.data:
             # z modulu 'flask_login' importujemy 'login_user'
             login_user(user, remember=form.remember.data)
+            # Trzeba zajac sie 'next' page ze wzgledow bezpieczenstwa.
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
@@ -46,3 +47,30 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+
+
+
+
+@pb_app.route('/book')
+@login_required
+def book(space_id):
+    space = PkgSpace.query.get_or_404(space_id)
+    if space.booker == 'none':
+        space.booker = current_user.username
+        pb_db.session.commit()
+        flash('Space has been booked for you.', 'success')
+    else:
+        flash('Space is already booked, sorry.', 'danger')
+    return redirect(url_for('home'))
+
+
+@pb_app.route('/cancel_book')
+@login_required
+def cancel_book(space_id):
+    space = PkgSpace.query.get_or_404(space_id)
+    space.booker = 'none'
+    pb_db.session.commit()
+    flash('Your booking has been cancelled.', 'success')
+    return redirect(url_for('home'))
+

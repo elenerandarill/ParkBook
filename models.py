@@ -7,7 +7,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-# UserMixin trzeba bylo dopisac zeby mozna bylo logowac uzytkownikow !!!
+# UserMixin trzeba bylo dopisac zeby mozna bylo korzystac z funkcji np. is_authenticated() !!!
 class User(pb_db.Model, UserMixin):
     id = pb_db.Column(pb_db.Integer, primary_key=True)
     username = pb_db.Column(pb_db.String(30), unique=True, nullable=False)
@@ -23,11 +23,11 @@ class User(pb_db.Model, UserMixin):
 class PkgSpace(pb_db.Model):
     id = pb_db.Column(pb_db.Integer, primary_key=True)
     number = pb_db.Column(pb_db.Integer, unique=True, nullable=False)
-    booker = pb_db.Column(pb_db.String(100), default='none')
+    booker = pb_db.Column(pb_db.String(30), default='none')
     # Potrzebne do połączenia kolumn z obu klas.
     # user_id z PkgSpace, a user.id z User.
     user_id = pb_db.Column(pb_db.ForeignKey('user.id'), nullable=False)
-    owner = pb_db.relationship('User', back_populates='all_spaces')
+    owner = pb_db.relationship('User', back_populates='all_spaces', foreign_keys=[user_id])
 
     def __repr__(self):
         return f"PkgSpace('{self.number}','{self.booker}')"

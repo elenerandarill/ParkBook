@@ -9,13 +9,23 @@
                     <th>Space number</th>
                     <th>Space booker</th>
                     <th>Owner</th>
+                    <th>Option</th>
                 </tr>
                 {% for space in all_spaces %}
                     <tr>
                         <td>{{ space.number }}</td>
                         <td>{{ space.booker }}</td>
-
+                        <td>{{ space.owner }}</td>
+                        {% if current_user.is_authenticated() %}
+                            {% if space.booker == 'none' %}
+                                <a href="{{ url_for('book') }}">Book</a>
+                            {% endif %}
+                            {% if space.booker == current_user.username %}
+                                <a href="{{ url_for('cancel_book') }}">Cancel</a>
+                            {% endif %}
+                        {% endif %}
                     </tr>
+
                 {% endfor %}
             </table>
     </div>
