@@ -1,3 +1,4 @@
+import flask
 from flask import render_template, Flask, flash, url_for, redirect, request
 from flask_login import login_user, current_user, logout_user, login_required
 from PbApp import pb_app, pb_db
@@ -55,14 +56,19 @@ def add_space():
     from forms import AddSpaceForm
     form = AddSpaceForm()
     if form.validate_on_submit():
-        space = PkgSpace(number=int(form.number.data), booker='none', owner=current_user)
-        pb_db.session.add(space)
-        pb_db.session.commit()
-        flash('Parking space created.', 'info')
+        find = PkgSpace.query.filter_by(number=form.number.data).first()
+        if find:
+            flash('Parking Space already exists.', 'danger')
+        else:
+            space = PkgSpace(number=int(form.number.data), booker='none', owner=current_user)
+            pb_db.session.add(space)
+            pb_db.session.commit()
+            flash('Parking space created.', 'info')
+            return redirect(url_for('home'))
     return render_template('addspace.html', title='Add Space', form=form)
 
 
-@pb_app.route('/book')
+@pb_app.route('/spaces/<int:space_id>/book', methods=['POST'])
 @login_required
 def book(space_id):
     space = PkgSpace.query.get_or_404(space_id)
@@ -75,9 +81,10 @@ def book(space_id):
     return redirect(url_for('home'))
 
 
-@pb_app.route('/cancel_book')
+@pb_app.route('/spaces/<int:space_id>/cancel_book', methods=['POST'])
 @login_required
 def cancel_book(space_id):
+    m = flask.request.method
     space = PkgSpace.query.get_or_404(space_id)
     space.booker = 'none'
     pb_db.session.commit()
