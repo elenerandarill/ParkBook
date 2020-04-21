@@ -30,4 +30,4 @@ class PkgSpace(pb_db.Model):
     owner = pb_db.relationship('User', back_populates='all_spaces', foreign_keys=[user_id])
 
     def __repr__(self):
-        return f"PkgSpace('{self.number}','{self.booker}')"
+        return f"PkgSpace('{self.number}','{self.booker}','{self.owner.username}')"

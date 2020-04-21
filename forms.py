@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, DecimalField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from models import User
+from models import User, PkgSpace
 
 
 class RegistrationForm(FlaskForm):
@@ -27,3 +27,13 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
+
+
+class AddSpaceForm(FlaskForm):
+    number = DecimalField('Space number', validators=[DataRequired()])
+    submit = SubmitField('Add Parking Space')
+
+    def validate_space_number(self, number):
+        space = PkgSpace.query.filter_by(number=number.data).first()
+        if space:
+            raise ValidationError('Sorry, this space number already exists.')

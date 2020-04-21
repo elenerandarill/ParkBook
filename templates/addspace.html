@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h3>Here you can add new Parking Space</h3>
+    <div>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset>
+                <div>
+                    {{ form.number.label() }}
+                    {% if form.number.errors %}
+                        {{ form.number() }}
+                        <div class="error">
+                            {% for error in form.number.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    {{ form.number() }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

@@ -49,7 +49,17 @@ def logout():
     return redirect(url_for('home'))
 
 
-
+@pb_app.route('/addspace', methods=['GET', 'POST'])
+@login_required
+def add_space():
+    from forms import AddSpaceForm
+    form = AddSpaceForm()
+    if form.validate_on_submit():
+        space = PkgSpace(number=int(form.number.data), booker='none', owner=current_user)
+        pb_db.session.add(space)
+        pb_db.session.commit()
+        flash('Parking space created.', 'info')
+    return render_template('addspace.html', title='Add Space', form=form)
 
 
 @pb_app.route('/book')
