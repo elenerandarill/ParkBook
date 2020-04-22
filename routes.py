@@ -8,7 +8,7 @@ from models import User, PkgSpace
 @pb_app.route('/')
 @pb_app.route('/home')
 def home():
-    all_spaces = PkgSpace.query.all()
+    all_spaces = PkgSpace.query.order_by(PkgSpace.number).all()
     return render_template('home.html', title='Home', all_spaces=all_spaces)
 
 
@@ -89,5 +89,15 @@ def cancel_book(space_id):
     space.booker = 'none'
     pb_db.session.commit()
     flash('Your booking has been cancelled.', 'success')
+    return redirect(url_for('home'))
+
+
+@pb_app.route('/spaces/<int:space_id>/delete_pksp', methods=['POST'])
+@login_required
+def delete_pksp(space_id):
+    space = PkgSpace.query.get_or_404(space_id)
+    pb_db.session.delete(space)
+    pb_db.session.commit()
+    flash("Parking Space has been deleted.", "info")
     return redirect(url_for('home'))
 

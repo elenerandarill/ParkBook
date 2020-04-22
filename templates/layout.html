@@ -15,12 +15,13 @@
 <body>
     <header>
         <div class="div01">
-            <a class="button" href="{{ url_for('home') }}">Home Page</a>
             {% if current_user.is_authenticated %}
                 <small>Welcome {{ current_user.username }}</small>
                 <br><br>
+                <a class="button" href="{{ url_for('home') }}">Home Page</a>
                 <a class="button" href="{{ url_for('logout') }}">Logout</a>
             {% else %}
+                <a class="button" href="{{ url_for('home') }}">Home Page</a>
                 <a class="button" href="{{ url_for('login') }}">Log In</a>
                 <a class="button" href="{{ url_for('register') }}">Register</a>
             {% endif %}

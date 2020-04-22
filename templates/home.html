@@ -16,6 +16,7 @@
                     <th>Space booker</th>
                     <th>Owner</th>
                     <th>Option</th>
+                    <th>Delete</th>
                 </tr>
                 {% for space in all_spaces %}
                     <tr>
@@ -23,21 +24,29 @@
                         <td>{{ space.booker }}</td>
                         <td>{{ space.owner.username }}</td>
                         <td>
-                        {% if current_user.is_authenticated %}
-                            {% if space.booker == 'none' %}
-                                <form action="{{ url_for('book', space_id=space.id) }}" method="POST">
-                                    <input type="submit" value="Book">
-                                </form>
+                            {% if current_user.is_authenticated %}
+                                {% if space.booker == 'none' %}
+                                    <form action="{{ url_for('book', space_id=space.id) }}" method="POST">
+                                        <input type="submit" value="Book">
+                                    </form>
+                                {% endif %}
+                                {% if space.booker == current_user.username %}
+                                    <form action="{{ url_for('cancel_book', space_id=space.id) }}" method="POST">
+                                        <input type="submit" value="Cancel">
+                                    </form>
+                                {% endif %}
                             {% endif %}
-                            {% if space.booker == current_user.username %}
-                                <form action="{{ url_for('cancel_book', space_id=space.id) }}" method="POST">
-                                    <input type="submit" value="Cancel">
-                                </form>
+                        </td>
+                        <td>
+                            {% if current_user.is_authenticated %}
+                                {% if space.owner.username == current_user.username %}
+                                    <form action="{{ url_for('delete_pksp', space_id=space.id) }}" method="POST">
+                                        <input type="submit" value="Delete">
+                                    </form>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
                         </td>
                     </tr>
-
                 {% endfor %}
             </table>
     </div>
